@@ -1,11 +1,20 @@
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
-import { TokenPayload } from '../models/User'
 
 dotenv.config()
 
-export class TokenManager {
+export enum USER_ROLES {
+    NORMAL = "NORMAL",
+    ADMIN = "ADMIN"
+} // realocar para o arquivo da entidade User
 
+export interface TokenPayload {
+    id: string,
+    name: string,
+    role: USER_ROLES
+} // realocar para o arquivo da entidade User
+
+export class TokenManager {
     public createToken = (payload: TokenPayload): string => {
         const token = jwt.sign(
             payload,
@@ -14,7 +23,6 @@ export class TokenManager {
                 expiresIn: process.env.JWT_EXPIRES_IN
             }
         )
-
         return token
     }
 
@@ -26,8 +34,7 @@ export class TokenManager {
             )
 
             return payload as TokenPayload
-
-        } catch (error) {
+				} catch (error) {
             return null
         }
     }
